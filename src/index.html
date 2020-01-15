@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>params</title>
+</head>
+<body>
+  <script>
+    let url = '/get'
+    let params = {
+      username: 'zx',
+      password: '123123111'
+    }
+    function isObject(val) {
+      return val !== null && typeof val === '[object Object]'
+    }
+    function isDate(val) {
+      return typeof val === '[object Object]'
+    }
+    function encode(val){
+      return encodeURIComponent(val)
+        .replace(/%40/g, '@')
+        .replace(/%3A/gi, ':')
+        .replace(/%24/g, '$')
+        .replace(/%2C/gi, ',')
+        .replace(/%20/g, '+')
+        .replace(/%5B/gi, '[')
+        .replace(/%5D/gi, ']') 
+    }
+    function buildUrl(url, params) {
+      if (!params) {
+        return url
+      }
+      // 定义一个数组，用来存储键值对
+      let arr = []
+      Object.keys(params).forEach((prop) => {
+        let val = params[prop]
+        if (val === null || val === 'undefined') {
+          return
+        }
+        let templateArr = []
+        templateArr = [val]
+        // if (Array.isArray(val)) {
+        //   val.forEach((ele) => {
+        //     prop = prop + []
+        //   })
+        // }
+        templateArr.forEach((ele) => {
+          if (isObject(ele)) {
+            ele = JSON.stringify(ele)
+          }
+          arr.push(`${encode(prop)}=${encode(ele)}`)
+        })
+      })
+      let dealParams = arr.join('&')
+      if (dealParams) {
+        // 去掉#号后面的参数
+        const index = url.indexOf('#')
+        if (index !== -1) {
+          url = url.slice(0, index)
+        }
+      }
+      url += url.indexOf('?') === -1 ? `?${dealParams}` : `&${dealParams}`
+      return url
+    }
+    let requestUrl = buildUrl(url, params)
+    console.log(requestUrl)
+  </script>
+</body>
+</html>

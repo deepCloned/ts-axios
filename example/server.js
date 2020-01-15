@@ -24,6 +24,19 @@ router.get('/simple/get', function (req, res) {
   })
 })
 
+router.get('/params/get', function (req, res) {
+  res.json({
+    msg: 'hello params express'
+  })
+})
+
+router.post('/data/get', function (req, res) {
+  console.log(req.url, req.method, req.data, req.params)
+  res.json({
+    res: `${req.method}-${req.url}`
+  })
+})
+
 app.use(router)
 
 app.use(webpackHotMiddleware(compiler))
